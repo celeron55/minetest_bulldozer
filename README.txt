@@ -5,6 +5,9 @@ Driveable bulldozer for pushing nodes and flattening ground.
 
 The entity spawner item is called bulldozer:bulldozer_item.
 
+There's no crafting recipe and this thing is very powerful, so only creative
+mode is recommended for now.
+
 Controls
 --------
 * Right click the bulldozer: Enter/exit vehicle
