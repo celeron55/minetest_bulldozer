@@ -142,6 +142,16 @@ function create_virtual_wall(player_pos_float, player_yaw, wall_dimensions, move
 		table.insert(non_walkable_nodes_in_placement_box, node_pos)
 	end
 
+	for i, node_pos in ipairs(nodes_in_wall) do
+		if node_pos.y >= player_pos.y - 0.9 and node_pos.y <= player_pos.y + 0.5 then
+			local node = minetest.get_node(node_pos)
+			local node_def = minetest.registered_nodes[node.name]
+			if node_def and node_def.groups and node_def.groups["cracky"] then
+				return false
+			end
+		end
+	end
+
 	local num_sounds_played = 0
 
 	for i, node_pos in ipairs(nodes_in_wall) do
@@ -165,6 +175,8 @@ function create_virtual_wall(player_pos_float, player_yaw, wall_dimensions, move
 			end
 		end
 	end
+
+	return true
 end
 
 function target_value(current, target, rate)
@@ -294,15 +306,6 @@ minetest.register_entity("bulldozer:bulldozer", {
 		local nwn_very_close_support = get_walkable_nodes_in_box(box)
 
         if ctrl.up then
-			local speed = 2.0
-
-            -- Move the bulldozer forward
-            self.object:set_velocity(vector.new(
-				math.cos(yaw+math.pi) * speed,
-				0,
-				math.sin(yaw+math.pi) * speed
-			))
-
 			local object_pos2 = self.object:get_pos()
 			if ctrl.jump then
 				object_pos2.y = object_pos2.y - y_off + 1.1
@@ -315,7 +318,19 @@ minetest.register_entity("bulldozer:bulldozer", {
 
 			local wall_dimensions = {2, (BULLDOZER_SIZE+1), CLEAR_HEIGHT}
 			local move_distance = 5
-			create_virtual_wall(object_pos2, object_yaw, wall_dimensions, move_distance, PLACEMENT_HEIGHT, PLACEMENT_DEPTH)
+			local can_move = create_virtual_wall(object_pos2, object_yaw,
+					wall_dimensions, move_distance, PLACEMENT_HEIGHT, PLACEMENT_DEPTH)
+
+			local speed = 2.0
+			if not can_move then
+				speed = 0.0
+			end
+			-- Move the bulldozer forward
+			self.object:set_velocity(vector.new(
+				math.cos(yaw+math.pi) * speed,
+				0,
+				math.sin(yaw+math.pi) * speed
+			))
         elseif ctrl.down then
 			local speed = 1.5
             -- Move the bulldozer backward
@@ -335,7 +350,7 @@ minetest.register_entity("bulldozer:bulldozer", {
 		end
 
         if (ctrl.jump and ctrl.up and (#nwn_tracks >= 1 or #nwn_very_close_support >= (BULLDOZER_SIZE*BULLDOZER_SIZE/2))) or
-				(ctrl.down and #nwn_tracks >= 1 and not ctrl.sneak) then
+				(ctrl.down and #nwn_tracks > (BULLDOZER_SIZE*BULLDOZER_SIZE/3) and not ctrl.sneak) then
 			local rate = 0.01
 			if #nwn_very_close_support >= 9 then
 				rate = 0.03
