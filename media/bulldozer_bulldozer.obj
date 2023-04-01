@@ -1,7 +1,3 @@
-# Axis-aligned boxes for Minetest
-
-mtllib boxes.mtl
-
 # Blade
 o Box1
 g Group1
