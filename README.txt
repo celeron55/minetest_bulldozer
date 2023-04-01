@@ -13,10 +13,10 @@ Controls
 - Left: Turn left
 - Right: Turn right
 - Jump:
-	- Hold while moving forward to grade upwards
+  - Hold while moving forward to grade upwards
 - Sneak:
-	- Hold while moving forward to grade downwards
-	- Hold while reversing to prevent climbing on top of ground
+  - Hold while moving forward to grade downwards
+  - Hold while reversing to prevent climbing on top of ground
 
 License
 -------
