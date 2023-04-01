@@ -197,11 +197,11 @@ local PLACEMENT_DEPTH = -5
 
 -- Register the bulldozer entity
 minetest.register_entity("bulldozer:bulldozer", {
-    initial_properties = {
-        physical = true,
-        collisionbox = {-1.4, -0.5, -1.4, 1.4, 0.8, 1.4},
-        visual = "mesh",
-        mesh = "bulldozer_bulldozer.obj",
+	initial_properties = {
+		physical = true,
+		collisionbox = {-1.4, -0.5, -1.4, 1.4, 0.8, 1.4},
+		visual = "mesh",
+		mesh = "bulldozer_bulldozer.obj",
 		textures = {
 			"bulldozer_bulldozer_blade.png",
 			"bulldozer_bulldozer_track.png",
@@ -210,52 +210,52 @@ minetest.register_entity("bulldozer:bulldozer", {
 			"bulldozer_bulldozer_body.png",
 			"bulldozer_bulldozer_body.png",
 		},
-    },
-    driver = nil,
+	},
+	driver = nil,
 	wanted_sound_pitch = 0.7,
 	played_sound_pitch = 0.0,
 	wanted_sound_gain = 0.2,
 	played_sound_gain = 0.0,
 
-    on_rightclick = function(self, clicker)
-        if not clicker or not clicker:is_player() then
-            return
-        end
+	on_rightclick = function(self, clicker)
+		if not clicker or not clicker:is_player() then
+			return
+		end
 
-        local player_name = clicker:get_player_name()
+		local player_name = clicker:get_player_name()
 
-        if self.driver and player_name == self.driver:get_player_name() then
-            -- Detach the player
-            self.driver:set_detach()
-            self.driver:set_eye_offset()
-            self.driver = nil
-            self.object:set_properties({
+		if self.driver and player_name == self.driver:get_player_name() then
+			-- Detach the player
+			self.driver:set_detach()
+			self.driver:set_eye_offset()
+			self.driver = nil
+			self.object:set_properties({
 				physical = true,
 			})
 			if self.sound_handle then minetest.sound_stop(self.sound_handle) end
-        elseif not self.driver then
-            -- Attach the player
-            self.driver = clicker
-            self.driver:set_attach(self.object, "", {x = 0, y = 0, z = 0}, {x = 0, y = -90, z = 0})
-            self.driver:set_eye_offset({x = 0, y = 2, z = 0})
-            self.object:set_properties({
+		elseif not self.driver then
+			-- Attach the player
+			self.driver = clicker
+			self.driver:set_attach(self.object, "", {x = 0, y = 0, z = 0}, {x = 0, y = -90, z = 0})
+			self.driver:set_eye_offset({x = 0, y = 2, z = 0})
+			self.object:set_properties({
 				physical = false, -- We want to go through nodes
 			})
 			self.wanted_sound_pitch = 0.7
 			self.wanted_sound_gain = 0.2
-        end
-    end,
+		end
+	end,
 
-    on_step = function(self, dtime)
-        if not self.driver then
+	on_step = function(self, dtime)
+		if not self.driver then
 			self:update_sound()
-            return
-        end
+			return
+		end
 
-        -- Get player control inputs
-        local ctrl = self.driver:get_player_control()
-        --local yaw = self.driver:get_look_horizontal()
-        local yaw = self.object:get_yaw()
+		-- Get player control inputs
+		local ctrl = self.driver:get_player_control()
+		--local yaw = self.driver:get_look_horizontal()
+		local yaw = self.object:get_yaw()
 
 		local object_pos = self.object:get_pos()
 
@@ -305,7 +305,7 @@ minetest.register_entity("bulldozer:bulldozer", {
 		}
 		local nwn_very_close_support = get_walkable_nodes_in_box(box)
 
-        if ctrl.up then
+		if ctrl.up then
 			local object_pos2 = self.object:get_pos()
 			if ctrl.jump then
 				object_pos2.y = object_pos2.y - y_off + 1.1
@@ -331,17 +331,17 @@ minetest.register_entity("bulldozer:bulldozer", {
 				0,
 				math.sin(yaw+math.pi) * speed
 			))
-        elseif ctrl.down then
+		elseif ctrl.down then
 			local speed = 1.5
-            -- Move the bulldozer backward
-            self.object:set_velocity(vector.new(
+			-- Move the bulldozer backward
+			self.object:set_velocity(vector.new(
 				math.cos(yaw) * speed,
 				0,
 				math.sin(yaw) * speed
 			))
-        else
-            self.object:set_velocity({x = 0, y = 0, z = 0})
-        end
+		else
+			self.object:set_velocity({x = 0, y = 0, z = 0})
+		end
 
 		if ctrl.left then
 			self.object:set_yaw(self.object:get_yaw() + 0.020)
@@ -349,7 +349,7 @@ minetest.register_entity("bulldozer:bulldozer", {
 			self.object:set_yaw(self.object:get_yaw() - 0.020)
 		end
 
-        if (ctrl.jump and ctrl.up and (#nwn_tracks >= 1 or #nwn_very_close_support >= (BULLDOZER_SIZE*BULLDOZER_SIZE/2))) or
+		if (ctrl.jump and ctrl.up and (#nwn_tracks >= 1 or #nwn_very_close_support >= (BULLDOZER_SIZE*BULLDOZER_SIZE/2))) or
 				(ctrl.down and #nwn_tracks > (BULLDOZER_SIZE*BULLDOZER_SIZE/3) and not ctrl.sneak) then
 			local rate = 0.01
 			if #nwn_very_close_support >= 9 then
@@ -357,17 +357,17 @@ minetest.register_entity("bulldozer:bulldozer", {
 			elseif #nwn_very_close_support >= 5 then
 				rate = 0.02
 			end
-            self.object:set_pos({
+			self.object:set_pos({
 				x = self.object:get_pos().x,
 				y = self.object:get_pos().y + rate,
 				z = self.object:get_pos().z
 			})
-        elseif (ctrl.sneak and ctrl.up) then
+		elseif (ctrl.sneak and ctrl.up) then
 			local rate = 0.01
 			if #nwn_support <= 7 then
 				rate = 0.02
 			end
-            self.object:set_pos({
+			self.object:set_pos({
 				x = self.object:get_pos().x,
 				y = self.object:get_pos().y - rate,
 				z = self.object:get_pos().z
@@ -418,10 +418,10 @@ minetest.register_entity("bulldozer:bulldozer", {
 	end,
 
 	update_sound = function(self)
-        if not self.driver then
+		if not self.driver then
 			if self.sound_handle then minetest.sound_stop(self.sound_handle) end
-            return
-        end
+			return
+		end
 		if math.abs(self.wanted_sound_pitch - self.played_sound_pitch) < 0.06 and
 				math.abs(self.wanted_sound_gain - self.played_sound_gain) < 0.03 then
 			return
@@ -448,11 +448,11 @@ on_place = function(itemstack, placer, pointed_thing)
 if pointed_thing.type ~= "node" then
 return
 end
-    local ent = minetest.add_entity(pointed_thing.above, "bulldozer:bulldozer")
-    ent:set_yaw(placer:get_look_horizontal())
+	local ent = minetest.add_entity(pointed_thing.above, "bulldozer:bulldozer")
+	ent:set_yaw(placer:get_look_horizontal())
 
-    itemstack:take_item()
-    return itemstack
+	itemstack:take_item()
+	return itemstack
 end,
 })
 
