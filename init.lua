@@ -308,7 +308,7 @@ minetest.register_entity("bulldozer:bulldozer", {
 		if ctrl.up then
 			local object_pos2 = self.object:get_pos()
 			if ctrl.jump then
-				object_pos2.y = object_pos2.y - y_off + 1.1
+				object_pos2.y = object_pos2.y - y_off + 0.6
 			elseif ctrl.sneak then
 				object_pos2.y = object_pos2.y - y_off - 0.9
 			else
