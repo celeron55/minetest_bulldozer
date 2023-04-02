@@ -24,7 +24,7 @@ Controls
 License
 -------
 * Code: GPL 3.0
-* Media: CC BY-SA 4.0
+* Media: CC BY-SA 3.0
 
 Credits
 -------
