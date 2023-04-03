@@ -142,6 +142,7 @@ function create_virtual_wall(player_pos_float, player_yaw, wall_dimensions, move
 		table.insert(non_walkable_nodes_in_placement_box, node_pos)
 	end
 
+	--[[
 	for i, node_pos in ipairs(nodes_in_wall) do
 		if node_pos.y >= player_pos.y - 0.9 and node_pos.y <= player_pos.y + 0.5 then
 			local node = minetest.get_node(node_pos)
@@ -151,6 +152,7 @@ function create_virtual_wall(player_pos_float, player_yaw, wall_dimensions, move
 			end
 		end
 	end
+	]]
 
 	local num_sounds_played = 0
 
